@@ -14,7 +14,7 @@ function test(fun, typ)
     nsig = Float64[]
     map(readdir(TESTDIR)) do fname
         χ, ρ, x = read_data(joinpath(TESTDIR, fname))
-        σ = reliable_digits(ρ, x, fun, Val(typ))
+        σ = reliable_digits(x, fun, typ(ρ))
 
         push!(cond, χ)
         push!(nsig, σ)
