@@ -122,5 +122,12 @@ load(T, fname) = open(fname, "r") do f
     A
 end
 
+save(A, fname) = open(fname, "w") do f
+    write(f, string(size(A)), "\n")
+    for i in eachindex(A)
+        write(f, string(A[i]), "\n")
+    end
+end
+
 using StochasticArithmetic
 StochasticArithmetic.value(x::Rational) = Float64(x)
