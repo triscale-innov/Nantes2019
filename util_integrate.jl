@@ -1,38 +1,3 @@
-using Plots
-using BenchmarkTools
-
-function test(integrate_err, T)
-    err = []
-    nmsh = Int[]
-
-    n = 10
-    while n < 10_000
-        push!(nmsh, n)
-        push!(err,  integrate_err(n, T))
-
-        n = Int(round(n*1.2))
-    end
-
-    p = plot(nmsh, [e.ref for e in err],
-         label="ref",
-         xaxis=("N",   :log10),
-         yaxis=("err", :log10),
-         ylims=(eps(T),1))
-
-    for col in fieldnames(typeof(err[1]))[2:end]
-        scatter!(nmsh, [getproperty(e, col) for e in err],
-             label=col)
-    end
-
-    p
-end
-
-
-
-
-
-
-
 """
 Rational number, with numerator and denominator of type T
 """
@@ -108,3 +73,47 @@ Base.show(io::IO, a::MyRational{T}) where {T} = print(io, num(a), "/", denom(a))
 to_float(x::MyRational) = num(x)/denom(x)
 
 nothing
+
+
+
+
+
+
+
+
+
+
+using Plots
+using BenchmarkTools
+
+function test(integrate_err, T)
+    err = []
+    nmsh = Int[]
+
+    n = 10
+    while n < 10_000
+        push!(nmsh, n)
+        push!(err,  integrate_err(n, T))
+
+        n = Int(round(n*1.2))
+    end
+
+    p = plot(nmsh, [e.ref for e in err],
+         label="ref",
+         xaxis=("N",   :log10),
+         yaxis=("err", :log10),
+         ylims=(eps(T),1))
+
+    for col in fieldnames(typeof(err[1]))[2:end]
+        scatter!(nmsh, [getproperty(e, col) for e in err],
+             label=col)
+    end
+
+    p
+end
+
+
+using StochasticArithmetic
+
+Base.show(io::IO, a::StochasticArithmetic.SFloat64) = print(io, "SF64(",value(a),")")
+Base.show(io::IO, a::StochasticArithmetic.SFloat32) = print(io, "SF32(",value(a),")")
